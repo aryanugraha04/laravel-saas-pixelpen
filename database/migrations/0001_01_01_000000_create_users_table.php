@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->unsignedBigInteger('plan_id')->default(1);
-            $table->integer('current_words_usage')->default(1000); // Free Plan
+            $table->integer('current_words_usage')->default(10000); // Free Plan
             $table->integer('words_used')->default(0);
             $table->string('status')->default(1);
             $table->rememberToken();

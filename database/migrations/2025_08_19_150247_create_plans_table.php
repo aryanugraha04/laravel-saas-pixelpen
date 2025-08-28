@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
-            $table->integer('name');
+            $table->string('name');
             $table->integer('monthly_word_limit');
             $table->decimal('price', 8, 2)->nullable();
             $table->string('templates')->nullable();

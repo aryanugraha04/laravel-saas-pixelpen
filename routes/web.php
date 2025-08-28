@@ -30,11 +30,11 @@ Route::get('/dashboard', function () {
     return view('admin.index');
 })->name('admin.dashboard');
 
-Route::get('/admin/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');
-Route::get('/admin/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
-Route::post('/admin/profile/store', [AdminController::class, 'AdminProfileStore'])->name('admin.profile.store');
-Route::get('/admin/change/password', [AdminController::class, 'AdminChangePassword'])->name('admin.change.password');
-Route::post('/admin/password/update', [AdminController::class, 'AdminPasswordUpdate'])->name('admin.password.update');
+Route::get('/logout', [AdminController::class, 'AdminLogout'])->name('admin.logout');
+Route::get('/profile', [AdminController::class, 'AdminProfile'])->name('admin.profile');
+Route::post('/profile/store', [AdminController::class, 'AdminProfileStore'])->name('admin.profile.store');
+Route::get('/change/password', [AdminController::class, 'AdminChangePassword'])->name('admin.change.password');
+Route::post('/password/update', [AdminController::class, 'AdminPasswordUpdate'])->name('admin.password.update');
 
 Route::controller(PlanController::class)->group(function(){
     Route::get('/all/plans', 'AllPlans')->name('all.plans');
@@ -47,6 +47,12 @@ Route::controller(PlanController::class)->group(function(){
 
 Route::controller(TemplateController::class)->group(function(){
     Route::get('/admin/template', 'AdminTemplate')->name('admin.template');
+    Route::get('/add/template', 'AddTemplate')->name('add.template');
+    Route::post('/store/template', 'StoreTemplate')->name('store.template');
+    Route::get('/edit/template/{id}', 'EditTemplate')->name('edit.template');
+    Route::post('/update/template/{id}', 'UpdateTemplate')->name('update.template');
+    Route::get('/details/template/{id}', 'DetailsTemplate')->name('details.template');
+    Route::post('/content/generate/{id}', 'AdminContentGenerate')->name('content.generate');
 });
 
 });

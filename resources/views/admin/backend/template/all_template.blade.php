@@ -13,6 +13,9 @@
                         <div class="">
                             <ul class="d-flex gap gx-2">
                                 <li>
+                                    <a href="{{ route('add.template') }}" class="btn btn-primary">Add Template</a>
+                                </li>
+                                <li>
                                     <a href="templates-list.html" class="btn btn-md btn-icon btn-outline-light"><em class="icon ni ni-view-list-wd"></em></a>
                                 </li>
                                 <li>
@@ -36,18 +39,33 @@
             
             <div class="row g-gs filter-container" data-animation="true">
                 @foreach ($templates as $item)
-                
-                <div class="col-sm-6 col-xxl-3 filter-item blog-content" data-category="blog-content">
-                    <div class="card card-full shadow-none">
-                        <div class="card-body">
+                <div class="col-sm-6 col-xxl-3 filter-item blog-content">
+                    <div class="card card-full shadow-none h-100">
+                        <div class="card-body d-flex flex-column"> {{-- Tambahkan class d-flex --}}
+
                             <div class="media media-rg media-middle media-circle text-primary bg-primary bg-opacity-20 mb-3">
                                 <em class="{{ $item->icon }}"></em>
                             </div>
-                            <h5 class="fs-4 fw-medium">{{ $item->title }}</h5>
+
+                            <a href="{{ route('edit.template', $item->id) }}">
+                                <h5 class="fs-4 fw-medium">{{ $item->title }}</h5>
+                            </a>
                             <p class="small text-light line-clamp-2">{{ $item->description }}</p>
+                            
+                            {{-- TOMBOL AKSI BARU DI BAWAH --}}
+                            <div class="mt-auto d-flex gap-2"> {{-- mt-auto akan mendorong tombol ke bawah --}}
+                                <a href="{{ route('edit.template', $item->id) }}" class="btn btn-sm btn-primary w-100">
+                                    <em class="fa-solid fa-pencil me-1"></em>
+                                    <span>Edit</span>
+                                </a>
+                                <a href="{{ route('details.template', $item->id) }}" class="btn btn-sm btn-outline-light w-100">
+                                    <em class="fa-solid fa-eye me-1"></em>
+                                    <span>Details</span>
+                                </a>
+                            </div>
                         </div>
-                    </div><!-- .card -->
-                </div><!-- .col -->
+                    </div>
+                </div>
                 @endforeach
             </div><!-- .row -->
         </div><!-- .nk-block -->
