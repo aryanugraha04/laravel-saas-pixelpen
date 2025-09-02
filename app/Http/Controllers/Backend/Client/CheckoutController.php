@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Http\Controllers\Backend\Client;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\BillingHistory;
+use App\Models\Plan;
+
+class CheckoutController extends Controller
+{
+    public function UserCheckout()
+    {
+        $user = Auth::user();
+        $userPlan = $user->plan;
+        $allPlans = Plan::where('price', '>', 0)->get(); // Exclude Free Plan
+        return view('client.backend.checkout.user_checkout', compact('allPlans','userPlan'));
+    }
+    //End Method
+
+    public function UserProcessCheckout(Request $request)
+    {
+        $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+            'bank_name' => 'required|string',
+
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+        $newPlan = Plan::find($request->plan_id);
+
+        BillingHistory::create([
+            'user_id' => $user->id,
+            'plan_id' => $newPlan->id,
+            'payment_date' => now(),
+            'total' => $newPlan->price,
+            'bank_name' => $request->bank_name,
+            'account_holder' => $request->account_holder,
+            'account_number' => $request->account_number,
+        ]);
+
+        /// Update user plan
+        $user->plan_id = $newPlan->id;
+        $user->current_words_usage = $newPlan->monthly_word_limit;
+        $user->words_used = 0; // Reset pemakaian kata saat upgrade plan
+        $user->save();
+
+        $notification = array(
+            'message' => 'Plan Upgrade Request Submitted',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->route('payment.success')->with($notification); 
+    }
+    //End Method
+
+    public function PaymentSuccess()
+    {
+        return view('client.backend.checkout.payment_success');
+    }
+}

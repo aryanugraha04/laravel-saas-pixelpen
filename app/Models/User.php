@@ -34,6 +34,11 @@ class User extends Authenticatable
         return $this->belongsTo(Plan::class, 'plan_id');
     }
 
+    public function billingHistories()
+    {
+        return $this->hasMany(BillingHistory::class);
+    }
+
     /**
      * Get the attributes that should be cast.
      *

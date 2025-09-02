@@ -11,6 +11,7 @@ use App\Http\Controllers\Backend\Admin\DocumentController;
 
 use App\Http\Controllers\Backend\Client\UserController;
 use App\Http\Controllers\Backend\Client\UserTemplateController;
+use App\Http\Controllers\Backend\Client\CheckoutController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,10 +35,17 @@ Route::controller(UserTemplateController::class)->group(function(){
     Route::get('/template', 'UserTemplate')->name('user.template');
     Route::get('/details/template/{id}', 'UserDetailsTemplate')->name('user.details.template');
     Route::post('/content/generate/{id}', 'UserContentGenerate')->name('user.content.generate');
+
     Route::get('/document', 'UserDocument')->name('user.document');
     Route::get('/edit/document/{id}', 'EditUserDocument')->name('edit.user.document');
     Route::post('/update/document/{id}', 'UserUpdateDocument')->name('user.update.document');
     Route::get('/delete/document/{id}', 'UserDeleteDocument')->name('user.delete.document');
+});
+
+Route::controller(CheckoutController::class)->group(function(){
+    Route::get('/checkout', 'UserCheckout')->name('user.checkout');
+    Route::post('/process/checkout', 'UserProcessCheckout')->name('user.process.checkout');
+    Route::get('/payment/success', 'PaymentSuccess')->name('payment.success');
 });
 
 });
