@@ -133,7 +133,7 @@
                     </td>
                     {{-- AKHIR BAGIAN YANG DIGANTI --}}
                     <td class="tb-col tb-col-end">
-                        <a href="#" class="link">Get Invoice</a>
+                        <a href="{{ route('invoice.generate', $billing->id) }}" class="link">Get Invoice</a>
                     </td>
                 </tr>
                 @empty
