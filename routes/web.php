@@ -89,6 +89,11 @@ Route::controller(DocumentController::class)->group(function(){
     Route::get('/edit/document/{id}', 'EditAdminDocument')->name('edit.admin.document');
     Route::post('/update/document/{id}', 'AdminUpdateDocument')->name('admin.update.document');
     Route::get('/delete/document/{id}', 'AdminDeleteDocument')->name('admin.delete.document');
+});
+
+Route::controller(AdminController::class)->group(function(){
+    Route::get('/all/orders', 'AllOrders')->name('all.orders');
+    Route::get('/update/order/status/{id}', 'UpdateOrderStatus')->name('update.order.status');
 
 });
 
