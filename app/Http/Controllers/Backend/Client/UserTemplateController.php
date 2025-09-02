@@ -135,4 +135,52 @@ class UserTemplateController extends Controller
     }
     }
     // End Method
+
+    public function UserDocument()
+    {
+        $id = Auth::user()->id;
+        $document = GeneratedContent::where('user_id', $id)->orderBy('id','desc')->get();
+        return view('client.backend.document.all_document', compact('document'));
+    }
+    // End Method
+
+    public function EditUserDocument($id)
+    {
+        $document = GeneratedContent::FindorFail($id);
+        return view('client.backend.document.edit_document', compact('document'));
+    }
+    // End Method
+
+    public function UserUpdateDocument(Request $request, $id)
+    {
+        $document = GeneratedContent::FindorFail($id);
+
+        $validateData = $request->validate([
+            'output' => 'required|string', 
+        ]);
+
+        $document->update([
+            'output' => $validateData['output'],
+        ]);
+
+        $notification = array(
+            'message' => 'Document Updated Successfully',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->route('user.document')->with($notification);   
+    }
+    // End Method
+
+    public function UserDeleteDocument($id)
+    {
+        GeneratedContent::find($id)->delete();
+        $notification = array(
+            'message' => 'Document Deleted Successfully',
+            'alert-type' => 'success',
+        );
+
+        return redirect()->back()->with($notification); 
+    }
+    // End Method
 }

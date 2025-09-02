@@ -34,7 +34,10 @@ Route::controller(UserTemplateController::class)->group(function(){
     Route::get('/template', 'UserTemplate')->name('user.template');
     Route::get('/details/template/{id}', 'UserDetailsTemplate')->name('user.details.template');
     Route::post('/content/generate/{id}', 'UserContentGenerate')->name('user.content.generate');
-
+    Route::get('/document', 'UserDocument')->name('user.document');
+    Route::get('/edit/document/{id}', 'EditUserDocument')->name('edit.user.document');
+    Route::post('/update/document/{id}', 'UserUpdateDocument')->name('user.update.document');
+    Route::get('/delete/document/{id}', 'UserDeleteDocument')->name('user.delete.document');
 });
 
 });
