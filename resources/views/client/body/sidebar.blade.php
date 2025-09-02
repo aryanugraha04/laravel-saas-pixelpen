@@ -37,41 +37,20 @@
                         </a>
                         <ul class="nk-menu-sub">
                             <li class="nk-menu-item">
-                                <a href="{{ route('admin.profile') }}" class="nk-menu-link">
+                                <a href="{{ route('user.profile') }}" class="nk-menu-link">
                                     <span class="nk-menu-text">Profile</span>
                                 </a>
                             </li>
                             <li class="nk-menu-item">
-                                <a href="{{ route('admin.change.password') }}" class="nk-menu-link">
+                                <a href="{{ route('user.change.password') }}" class="nk-menu-link">
                                     <span class="nk-menu-text">Change Password</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="nk-menu-item has-sub">
-                        <a href="#" class="nk-menu-link nk-menu-toggle">
-                            <span class="nk-menu-icon">
-                                <em class="icon ni ni-folder-list"></em>
-                            </span>
-                            <span class="nk-menu-text">Plans</span>
-                        </a>
-                        <ul class="nk-menu-sub">
-                            <li class="nk-menu-item">
-                                <a href="{{ route('all.plans') }}" class="nk-menu-link">
-                                    <span class="nk-menu-text">All Plans</span>
-                                </a>
-                            </li>
-                            <li class="nk-menu-item">
-                                <a href="{{ route('add.plans') }}" class="nk-menu-link">
-                                    <span class="nk-menu-text">Add Plans</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    
                     <li class="nk-menu-item">
-                        <a href="{{ route('admin.template') }}" class="nk-menu-link">
+                        <a href="" class="nk-menu-link">
                             <span class="nk-menu-icon">
                                 <em class="icon ni ni-user"></em>
                             </span>
@@ -79,7 +58,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="{{ route('admin.document') }}" class="nk-menu-link">
+                        <a href="" class="nk-menu-link">
                             <span class="nk-menu-icon">
                                 <em class="icon ni ni-user"></em>
                             </span>
@@ -87,7 +66,7 @@
                         </a>
                     </li>
                     <li class="nk-menu-item">
-                        <a href="{{ route('admin.logout') }}" class="nk-menu-link">
+                        <a href="{{ route('user.logout') }}" class="nk-menu-link">
                             <span class="nk-menu-icon">
                                 <em class="icon ni ni-wallet"></em>
                             </span>
@@ -101,19 +80,42 @@
     <div class="nk-sidebar-element nk-sidebar-footer">
         <div class="nk-sidebar-footer-extended pt-3">
             <div class="border border-light rounded-3">
-                {{-- <div class="px-3 py-2 bg-white border-bottom border-light rounded-top-3">
+
+                @php
+                    $id = Auth::user()->id;
+                    $profileData = App\Models\User::find($id);
+
+                    /// Define word limits base on the Plan table 
+                    $wordLimits = [
+                        'Free' => 10000,
+                        'Pro' => 30000,
+                        'Pro+' => 50000,
+                    ];
+                
+                    /// Get the plan name and corresponding word limit 
+                    $planName = $profileData->plan->name;
+                    $wordLimit = isset($wordLimits[$planName]) ? $wordLimits[$planName] : 10000; // Default to 10000 if any plan not found
+
+                    $totalWords = $profileData->current_word_usage ?? $wordLimit;
+                    $wordsUsed = $profileData->words_used ?? 0;
+
+                    // Calculate words left and percentage used 
+                    $wordsLeft = max(0, $totalWords - $wordsUsed);
+                    $percentageUsed = $totalWords > 0 ? min(100, ($wordsUsed / $totalWords) * 100) : 0;
+                @endphp
+                <div class="px-3 py-2 bg-white border-bottom border-light rounded-top-3">
                     <div class="d-flex flex-wrap align-items-center justify-content-between">
-                        <h6 class="lead-text">Free Plan</h6>
-                        <a class="link link-primary" href="pricing-plans.html">
+                        <h6 class="lead-text">{{ $profileData->plan->name }}</h6>
+                        <a class="link link-primary" href="{{ route('user.profile') }}">
                             <em class="ni ni-spark-fill icon text-warning"></em>
                             <span>Upgrade</span>
                         </a>
                     </div>
                     <div class="progress progress-md">
-                        <div class="progress-bar" data-progress="25%"></div>
+                        <div class="progress-bar" data-progress="{{ $percentageUsed, 2}}%" style="width: {{ round($percentageUsed, 2) }}%"></div>
                     </div>
-                    <h6 class="lead-text mt-2">1,360 <span class="text-light">words left</span></h6>
-                </div> --}}
+                    <h6 class="lead-text mt-2">{{ $wordsLeft }} <span class="text-light">words left</span></h6>
+                </div>
 
 
             @php
@@ -123,7 +125,7 @@
                 <a class="d-flex px-3 py-2 bg-primary bg-opacity-10 rounded-bottom-3" href="profile.html">
                     <div class="media-group">
                         <div class="media media-sm media-middle media-circle text-bg-primary">
-                            <img src="{{ (!empty($profileData->photo)) ? asset('upload/admin_images/'.$profileData->photo) : 
+                            <img src="{{ (!empty($profileData->photo)) ? asset('upload/user_images/'.$profileData->photo) : 
                             asset('upload/no_image.jpg') }}" />
                         </div>
                         <div class="media-text">

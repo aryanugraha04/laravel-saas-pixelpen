@@ -111,18 +111,14 @@
                                                     <span>Export</span>
                                                     <em class="icon ni ni-chevron-down"></em>
                                                 </button>
-                                                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
-                                                    <div class="dropdown-content">
-                                                        <ul class="link-list link-list-hover-bg-primary link-list-md">
-                                                            <li>
-                                                                <a href="#" id="copy-text"><em class="icon ni ni-file-doc"></em><span>Copy Text</span></a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#"><em class="icon ni ni-file-text"></em><span>Text</span></a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="#" class="dropdown-item" id="copy-text">Copy Text</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="dropdown-item">Text File</a>
+                                                    </li>
+                                                </ul>
                                             </div>
                                         </li>
                                         <li>
@@ -149,6 +145,9 @@
         </div>
     </div>
 </div>
+
+{{-- TAMBAHKAN SCRIPT MARKED.JS DARI CDN --}}
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
 // Handle form submission with AJAX
@@ -210,20 +209,60 @@ function formatContent(output, formData) {
         }
     }
 
-    const lines = output.split('\n').filter(line => line.trim() !== '');
+    // Gunakan marked.js untuk convert markdown -> HTML
+    const htmlContent = marked.parse(output);
 
-    let html = `<h2>${title}</h2>`; 
-
-    const contentLines = lines.slice(3);
-    for (let i = 0; i < contentLines.length; i++) {
-        html += `<p>${contentLines[i]}</p>`;
-        if ((i + 1) % 3 === 0 && i + 1 < contentLines.length) {
-            html += '<hr>';
-        }
-    }
+    // Bungkus dengan judul biar rapi
+    let html = `<h2>${title}</h2><div>${htmlContent}</div>`;
 
     return html;
+}   
+
+
+// Function to create and trigger a file download
+function downloadFile(content, fileName, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
+
+// Handle export dropdown options
+document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const editor = document.getElementById('editor-v1');
+        if (!editor) {
+            alert('Editor content not found.');
+            return;
+        }
+
+        const action = this.id || this.textContent.trim();
+        const templateTitle = document.querySelector('.nk-editor-title h4').textContent.trim() || 'Generated_Content';
+        const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const fileNameBase = `${templateTitle}_${timestamp}`;
+
+        if (action === 'copy-text') {
+            // Copy Text (already implemented)
+            const content = editor.textContent || editor.innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                toastr.success('Text copied to clipboard!');
+            }).catch(err => {
+                alert('Failed to copy text: ' + err);
+            });
+        } else if (action === 'Text File') {
+            // Export as Text File
+            const content = editor.textContent || editor.innerText;
+            downloadFile(content, `${fileNameBase}.txt`, 'text/plain');
+            toastr.success('Text file downloaded successfully!');
+        }  
+    });
+});
 
 </script>
 

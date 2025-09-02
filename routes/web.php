@@ -7,6 +7,9 @@ use App\Http\Middleware\isUser;
 use App\Http\Controllers\Backend\Admin\AdminController;
 use App\Http\Controllers\Backend\Admin\PlanController;
 use App\Http\Controllers\Backend\Admin\TemplateController;
+use App\Http\Controllers\Backend\Admin\DocumentController;
+
+use App\Http\Controllers\Backend\Client\UserController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,11 +17,17 @@ Route::get('/', function () {
 
 
 /// User Routes
-Route::middleware(['auth', isUser::class])-> group(function() {
-
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('client.index');
 })->name('dashboard');
+
+Route::prefix('user')->middleware(['auth', isUser::class])-> group(function() {
+
+Route::get('/logout', [UserController::class, 'UserLogout'])->name('user.logout');
+Route::get('/profile', [UserController::class, 'UserProfile'])->name('user.profile');
+Route::post('/profile/store', [UserController::class, 'UserProfileStore'])->name('user.profile.store');
+Route::get('/change/password', [UserController::class, 'UserChangePassword'])->name('user.change.password');
+Route::post('/password/update', [UserController::class, 'UserPasswordUpdate'])->name('user.password.update');
 
 });
 /// End User Routes
@@ -46,13 +55,21 @@ Route::controller(PlanController::class)->group(function(){
 });
 
 Route::controller(TemplateController::class)->group(function(){
-    Route::get('/admin/template', 'AdminTemplate')->name('admin.template');
+    Route::get('/template', 'AdminTemplate')->name('admin.template');
     Route::get('/add/template', 'AddTemplate')->name('add.template');
     Route::post('/store/template', 'StoreTemplate')->name('store.template');
     Route::get('/edit/template/{id}', 'EditTemplate')->name('edit.template');
     Route::post('/update/template/{id}', 'UpdateTemplate')->name('update.template');
     Route::get('/details/template/{id}', 'DetailsTemplate')->name('details.template');
     Route::post('/content/generate/{id}', 'AdminContentGenerate')->name('content.generate');
+});
+
+Route::controller(DocumentController::class)->group(function(){
+    Route::get('/document', 'AdminDocument')->name('admin.document');
+    Route::get('/edit/document/{id}', 'EditAdminDocument')->name('edit.admin.document');
+    Route::post('/update/document/{id}', 'AdminUpdateDocument')->name('admin.update.document');
+    Route::get('/delete/document/{id}', 'AdminDeleteDocument')->name('admin.delete.document');
+
 });
 
 });
