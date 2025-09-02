@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\Admin\TemplateController;
 use App\Http\Controllers\Backend\Admin\DocumentController;
 
 use App\Http\Controllers\Backend\Client\UserController;
+use App\Http\Controllers\Backend\Client\UserTemplateController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +29,13 @@ Route::get('/profile', [UserController::class, 'UserProfile'])->name('user.profi
 Route::post('/profile/store', [UserController::class, 'UserProfileStore'])->name('user.profile.store');
 Route::get('/change/password', [UserController::class, 'UserChangePassword'])->name('user.change.password');
 Route::post('/password/update', [UserController::class, 'UserPasswordUpdate'])->name('user.password.update');
+
+Route::controller(UserTemplateController::class)->group(function(){
+    Route::get('/template', 'UserTemplate')->name('user.template');
+    Route::get('/details/template/{id}', 'UserDetailsTemplate')->name('user.details.template');
+    Route::post('/content/generate/{id}', 'UserContentGenerate')->name('user.content.generate');
+
+});
 
 });
 /// End User Routes

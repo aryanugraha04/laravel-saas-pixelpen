@@ -1,5 +1,5 @@
-@extends('admin.dashboard')
-@section('admin')
+@extends('client.client_dashboard')
+@section('client')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <style>
@@ -27,7 +27,7 @@
                         <div class="mb-3">
                             <p><strong>Your balance is {{ $user->current_words_usage - $user->words_used }} words left</strong></p>
                         </div>
-                        <form id="generateForm" action="{{ route('content.generate', $template->id) }}" method="POST" enctype="multipart/form-data">
+                        <form id="generateForm" action="{{ route('user.content.generate', $template->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="Language" class="form-label">Language</label>
