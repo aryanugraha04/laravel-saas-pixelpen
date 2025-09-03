@@ -14,16 +14,16 @@ use App\Http\Controllers\Backend\Client\UserTemplateController;
 use App\Http\Controllers\Backend\Client\CheckoutController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('home.index');
+})->name('home.index');
 
 
 /// User Routes
+Route::prefix('user')->middleware(['auth', isUser::class])-> group(function() {
+
 Route::get('/dashboard', function () {
     return view('client.index');
 })->name('dashboard');
-
-Route::prefix('user')->middleware(['auth', isUser::class])-> group(function() {
 
 Route::get('/logout', [UserController::class, 'UserLogout'])->name('user.logout');
 Route::get('/profile', [UserController::class, 'UserProfile'])->name('user.profile');

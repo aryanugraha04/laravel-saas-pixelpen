@@ -18,7 +18,7 @@
                 <div class="nk-shape bg-shape-blur-a start-0 top-0"></div>
                 <div class="nk-shape bg-shape-blur-b end-0 bottom-0"></div>
                 <div class="text-center pt-5">
-                    <a href="index.html" class="logo-link">
+                    <a href="{{ route('home.index') }}" class="logo-link">
                         <div class="logo-wrap">
                             <img class="logo-img logo-light" src="{{ asset('backend/images/logo.png') }}" srcset="{{ asset('backend/images/logo2x.png 2x') }}" alt="">
                             <img class="logo-img logo-dark" src="{{ asset('backend/images/logo-dark.png') }}" srcset="{{ asset('backend/images/logo-dark2x.png 2x') }}" alt="">
