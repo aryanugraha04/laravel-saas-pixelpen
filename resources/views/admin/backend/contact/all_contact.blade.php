@@ -53,7 +53,7 @@
                             <div class="fs-6 text-light d-inline-flex flex-wrap gap gx-2">{{ $item->name }}</div>
                         </td>
                         <td class="tb-col tb-col-sm">
-                            <div class="fs-6 text-light">{{ $item->email }} / Per Month</div>
+                            <div class="fs-6 text-light">{{ $item->email }}</div>
                         </td>
                         <td class="tb-col tb-col-sm">
                             <div class="badge text-bg-success-soft rounded-pill px-2 py-1 fs-6 lh-sm">{{ $item->subject }}</div>
