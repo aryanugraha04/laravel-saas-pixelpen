@@ -76,7 +76,10 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-3">Generate</button>
+                        <button type="button" id="generateButton" class="btn btn-primary mt-3">
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span class="button-text">Generate</span>
+                        </button>
                         </form>
                     </div>
                     {{-- End Left Sidebar --}}
@@ -150,42 +153,64 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script>
-// Handle form submission with AJAX
-document.getElementById('generateForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
+    // Menjalankan skrip setelah semua elemen halaman dimuat
+    document.addEventListener('DOMContentLoaded', function() {
 
-    const form = this;
-    const formData = new FormData(form);
+        // Ambil elemen-elemen penting
+        const generateButton = document.getElementById('generateButton');
+        const form = document.getElementById('generateForm'); // Form input
+        const editor = document.getElementById('editor-v1'); // Div editor
 
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
+        // Pastikan semua elemen ada
+        if (!generateButton || !form || !editor) {
+            console.error('One or more essential elements (button, form, editor) are missing.');
+            return;
         }
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response Data:', data); // Debug
-        if (data.success) {
-            const editor = document.getElementById('editor-v1');
-            if (editor) {
-                const formattedContent = formatContent(data.output, formData);
-                editor.innerHTML = formattedContent; // Set formatted HTML
-                updateCounts(); // Update word and character count
-            } else {
-                console.error('Editor element not found');
-            }
-        } else {
-            alert(data.message || 'Failed to generate content.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while generating content.');
+
+        // Tambahkan event listener 'click' pada tombol Generate
+        generateButton.addEventListener('click', function() {
+            const buttonText = generateButton.querySelector('.button-text');
+            const spinner = generateButton.querySelector('.spinner-border');
+            const formData = new FormData(form);
+
+            // --- MULAI LOADING ---
+            generateButton.disabled = true;
+            spinner.classList.remove('d-none');
+            buttonText.textContent = 'Generating...';
+            editor.innerHTML = '<p>Please wait while we generate your content...</p>';
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const formattedContent = marked.parse(data.output);
+                    editor.innerHTML = formattedContent;
+                    updateCounts();
+                } else {
+                    editor.innerHTML = `<p style="color: red;">${data.message || 'Failed to generate content.'}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                editor.innerHTML = `<p style="color: red;">An error occurred. Please try again.</p>`;
+            })
+            .finally(() => {
+                // --- SELESAI LOADING ---
+                generateButton.disabled = false;
+                spinner.classList.add('d-none');
+                buttonText.textContent = 'Generate';
+            });
+        });
+
     });
-});
 
 // Function to update word and character count
 function updateCounts() {
