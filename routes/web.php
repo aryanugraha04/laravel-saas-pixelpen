@@ -13,6 +13,8 @@ use App\Http\Controllers\Backend\Client\UserController;
 use App\Http\Controllers\Backend\Client\UserTemplateController;
 use App\Http\Controllers\Backend\Client\CheckoutController;
 
+use App\Http\Controllers\Frontend\HomeController;
+
 Route::get('/', function () {
     return view('home.index');
 })->name('home.index');
@@ -97,8 +99,31 @@ Route::controller(AdminController::class)->group(function(){
 
 });
 
+Route::controller(HomeController::class)->group(function(){
+    Route::get('/home/slider', 'HomeSlider')->name('home.slider');
+    Route::post('/update/slider', 'UpdateSlider')->name('update.slider');
+    Route::get('/all/heading', 'AllHeading')->name('all.heading');
+    Route::get('/add/heading', 'AddHeading')->name('add.heading');
+    Route::post('/store/heading', 'StoreHeading')->name('store.heading');
+    Route::get('/edit/heading/{id}', 'EditHeading')->name('edit.heading');
+    Route::post('/update/heading', 'UpdateHeading')->name('update.heading');
+    Route::get('/delete/heading/{id}', 'DeleteHeading')->name('delete.heading');
+    Route::get('/contact/message', 'ContactMessage')->name('contact.message');
+    Route::get('/delete/contact/message/{id}', 'DeleteContactMessage')->name('delete.contact.message');
+});
+
 });
 /// End Admin Routes
+
+////////// HOME FRONTEND ////////////
+Route::controller(HomeController::class)->group(function(){
+    Route::get('/usecase', 'UseCase')->name('usecase');
+    Route::get('/features', 'Features')->name('features');
+    Route::get('/pricing', 'Pricing')->name('pricing');
+    Route::get('/contact', 'Contact')->name('contact');
+    Route::post('/store/contact', 'StoreContact')->name('store.contact');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

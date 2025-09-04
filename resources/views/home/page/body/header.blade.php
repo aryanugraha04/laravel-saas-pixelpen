@@ -1,11 +1,9 @@
-<header class="nk-header has-mask">
-    <div class="nk-mask bg-gradient-a"></div>
-    <div class="nk-mask bg-pattern-dot bg-blend-top"></div>
+<header class="nk-header">
     <div class="nk-header-main nk-menu-main will-shrink is-transparent ignore-mask">
         <div class="container">
             <div class="nk-header-wrap">
                 <div class="nk-header-logo">
-                    <a href="{{ route('home.index') }}" class="logo-link">
+                    <a href="index.html" class="logo-link">
                         <div class="logo-wrap">
                             <img class="logo-img logo-light" src="{{ asset('frontend/images/logo.png') }}" srcset="{{ asset('frontend/images/logo2x.png') }} 2x" alt="">
                             <img class="logo-img logo-dark" src="{{ asset('frontend/images/logo-dark.png') }}" srcset="{{ asset('frontend/images/logo-dark2x.png') }} 2x" alt="">
@@ -72,7 +70,6 @@
             </div><!-- .nk-header-wrap -->
         </div><!-- .container -->
     </div><!-- .nk-header-main -->
-    @include('home.layout.slider')
 </header><!-- .nk-header -->
 
 <script type="text/javascript">

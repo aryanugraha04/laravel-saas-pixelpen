@@ -1,12 +1,16 @@
 <section class="section has-mask">
     <div class="nk-mask bg-pattern-dot bg-blend-around mt-10p mb-3"></div>
+
+    @php
+        $heading = App\Models\Heading::find(2);
+    @endphp
     <div class="container">
         <div class="section-head">
             <div class="row justify-content-center text-center">
                 <div class="col-lg-9 col-xl-8 col-xxl-7">
                     <h6 class="overline-title text-primary">How it works</h6>
-                    <h2 class="title">Instruct to our AI and generate copy</h2>
-                    <p class="lead">Give our AI a few descriptions and we'll automatically create blog articles, product descriptions and more for you within just few second.</p>
+                    <h2 class="title">{{ $heading->title }}</h2>
+                    <p class="lead">{{ $heading->description }}</p>
                 </div>
             </div>
         </div><!-- .section-head -->
